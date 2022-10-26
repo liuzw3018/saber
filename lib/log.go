@@ -33,8 +33,7 @@ const (
 
 var Log *Logger
 
-type Logger struct {
-}
+type Logger struct{}
 
 func (l *Logger) TagInfo(trace *TraceContext, srtag string, m map[string]interface{}) {
 	m[_srTag] = checkDLTag(srtag)

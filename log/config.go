@@ -18,9 +18,10 @@ type ConfConsoleWriter struct {
 }
 
 type LogConfig struct {
-	Level string            `toml:"LogLevel"`
-	FW    ConfFileWriter    `toml:"FileWriter"`
-	CW    ConfConsoleWriter `toml:"ConsoleWriter"`
+	Level      string            `toml:"LogLevel"`
+	FW         ConfFileWriter    `toml:"FileWriter"`
+	CW         ConfConsoleWriter `toml:"ConsoleWriter"`
+	CallerSkip int               `toml:"caller_skip"`
 }
 
 func SetupLogInstanceWithConf(lc LogConfig, logger *Logger) (err error) {
@@ -53,6 +54,8 @@ func SetupLogInstanceWithConf(lc LogConfig, logger *Logger) (err error) {
 		w.SetColor(lc.CW.Color)
 		logger.Register(w)
 	}
+
+	logger.SetCaller(lc.CallerSkip)
 	switch lc.Level {
 	case "trace":
 		logger.SetLevel(TRACE)

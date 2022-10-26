@@ -6,6 +6,7 @@
 
 [log]
     log_level = "trace"         #日志打印最低级别
+    caller_skip = 3             #运行时文件查找级别
     [log.file_writer]           #文件写入配置
         on = true
         log_path = "./saber.inf.log"

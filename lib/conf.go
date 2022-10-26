@@ -36,9 +36,10 @@ type LogConfConsoleWriter struct {
 }
 
 type LogConfig struct {
-	Level string               `mapstructure:"log_level"`
-	FW    LogConfFileWriter    `mapstructure:"file_writer"`
-	CW    LogConfConsoleWriter `mapstructure:"console_writer"`
+	Level      string               `mapstructure:"log_level"`
+	FW         LogConfFileWriter    `mapstructure:"file_writer"`
+	CW         LogConfConsoleWriter `mapstructure:"console_writer"`
+	CallerSkip int                  `mapstructure:"caller_skip"`
 }
 
 type MysqlMapConf struct {
@@ -110,7 +111,8 @@ func InitBaseConf(path string) error {
 
 	//配置日志
 	logConf := slog.LogConfig{
-		Level: ConfBase.Log.Level,
+		Level:      ConfBase.Log.Level,
+		CallerSkip: ConfBase.Log.CallerSkip,
 		FW: slog.ConfFileWriter{
 			On:              ConfBase.Log.FW.On,
 			LogPath:         ConfBase.Log.FW.LogPath,

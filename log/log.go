@@ -59,6 +59,7 @@ type Logger struct {
 	c           chan bool
 	layout      string
 	recordPool  *sync.Pool
+	callerSkip  int
 }
 
 func NewLogger() *Logger {
@@ -89,6 +90,10 @@ func (l *Logger) Register(w Writer) {
 
 func (l *Logger) SetLevel(lvl int) {
 	l.level = lvl
+}
+
+func (l *Logger) SetCaller(layer int) {
+	l.callerSkip = layer
 }
 
 func (l *Logger) SetLayout(layout string) {
@@ -145,7 +150,7 @@ func (l *Logger) deliverRecordToWriter(level int, format string, args ...interfa
 	}
 
 	// source code, file and line num
-	_, file, line, ok := runtime.Caller(2)
+	_, file, line, ok := runtime.Caller(l.callerSkip)
 	if ok {
 		code = path.Base(file) + ":" + strconv.Itoa(line)
 	}
@@ -232,6 +237,10 @@ var (
 	loggerDefault *Logger
 	takeup        = false
 )
+
+func SetCaller(layer int) {
+	loggerDefault.callerSkip = layer
+}
 
 func SetLevel(lvl int) {
 	defaultLoggerInit()
