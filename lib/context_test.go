@@ -16,19 +16,11 @@ func TestSetGinTraceContext(t *testing.T) {
 
 	ginCtx := &gin.Context{}
 	_ = SetGinTraceContext(ginCtx, trace)
-	trace, ok := GetTraceContext(ginCtx).(*TraceContext)
-	if !ok {
-		t.Log("fail")
-		return
-	}
-	t.Log(*trace)
+	trace = GetTraceContext(ginCtx)
+	t.Log(trace)
 
 	ctx := context.Background()
 	ctx = SetTraceContext(ctx, trace)
-	trace, ok = GetTraceContext(ctx).(*TraceContext)
-	if !ok {
-		t.Log("fail")
-		return
-	}
-	t.Log(*trace)
+	trace = GetTraceContext(ctx)
+	t.Log(trace)
 }

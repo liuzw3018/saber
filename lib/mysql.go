@@ -27,56 +27,56 @@ func InitDBPool(path string) error {
 	DBMapPool = map[string]*sql.DB{}
 	GORMMapPool = map[string]*gorm.DB{}
 	for confName, DbConf := range DbConfMap.List {
-		dbpool, err := sql.Open("mysql", DbConf.DataSourceName)
+		dbPool, err := sql.Open("mysql", DbConf.DataSourceName)
 		if err != nil {
 			return err
 		}
-		dbpool.SetMaxOpenConns(DbConf.MaxOpenConn)
-		dbpool.SetMaxIdleConns(DbConf.MaxIdleConn)
-		dbpool.SetConnMaxLifetime(time.Duration(DbConf.MaxConnLifeTime) * time.Second)
-		err = dbpool.Ping()
+		dbPool.SetMaxOpenConns(DbConf.MaxOpenConn)
+		dbPool.SetMaxIdleConns(DbConf.MaxIdleConn)
+		dbPool.SetConnMaxLifetime(time.Duration(DbConf.MaxConnLifeTime) * time.Second)
+		err = dbPool.Ping()
 		if err != nil {
 			return err
 		}
 
 		//gorm连接方式
-		dbGorm, err := gorm.Open(mysql.New(mysql.Config{Conn: dbpool}), &gorm.Config{
+		dbGorm, err := gorm.Open(mysql.New(mysql.Config{Conn: dbPool}), &gorm.Config{
 			Logger: &DefaultMysqlGormLogger,
 		})
 		if err != nil {
 			return err
 		}
-		DBMapPool[confName] = dbpool
+		DBMapPool[confName] = dbPool
 		GORMMapPool[confName] = dbGorm
 	}
 
 	//手动配置连接
-	if dbpool, err := GetDBPool("default"); err == nil {
-		DBDefaultPool = dbpool
+	if dbPool, err := GetDBPool("default"); err == nil {
+		DBDefaultPool = dbPool
 	}
-	if dbpool, err := GetGormPool("default"); err == nil {
-		GORMDefaultPool = dbpool
+	if dbPool, err := GetGormPool("default"); err == nil {
+		GORMDefaultPool = dbPool
 	}
 	return nil
 }
 
 func GetDBPool(name string) (*sql.DB, error) {
-	if dbpool, ok := DBMapPool[name]; ok {
-		return dbpool, nil
+	if dbPool, ok := DBMapPool[name]; ok {
+		return dbPool, nil
 	}
 	return nil, errors.New("get pool error")
 }
 
 func GetGormPool(name string) (*gorm.DB, error) {
-	if dbpool, ok := GORMMapPool[name]; ok {
-		return dbpool, nil
+	if dbPool, ok := GORMMapPool[name]; ok {
+		return dbPool, nil
 	}
 	return nil, errors.New("get pool error")
 }
 
 func CloseDB() error {
-	for _, dbpool := range DBMapPool {
-		dbpool.Close()
+	for _, dbPool := range DBMapPool {
+		dbPool.Close()
 	}
 	DBMapPool = make(map[string]*sql.DB)
 	GORMMapPool = make(map[string]*gorm.DB)
@@ -103,7 +103,7 @@ func DBPoolLogQuery(trace *TraceContext, sqlDb *sql.DB, query string, args ...in
 	return rows, err
 }
 
-//mysql 日志打印类型
+// DefaultMysqlGormLogger 日志打印类型
 var DefaultMysqlGormLogger = MysqlGormLogger{
 	LogLevel:      logger.Info,
 	SlowThreshold: 200 * time.Millisecond,
@@ -123,21 +123,22 @@ func (mgl *MysqlGormLogger) Info(ctx context.Context, message string, values ...
 	trace := GetTraceContext(ctx)
 	params := make(map[string]interface{})
 	params["message"] = message
-	params["values"] = fmt.Sprint(values)
+	//params["values"] = fmt.Sprint(values)
+	params["values"] = fmt.Sprintf("%s", values)
 	Log.TagInfo(trace, "_com_mysql_Info", params)
 }
 func (mgl *MysqlGormLogger) Warn(ctx context.Context, message string, values ...interface{}) {
 	trace := GetTraceContext(ctx)
 	params := make(map[string]interface{})
 	params["message"] = message
-	params["values"] = fmt.Sprint(values)
+	params["values"] = fmt.Sprintf("%s", values)
 	Log.TagInfo(trace, "_com_mysql_Warn", params)
 }
 func (mgl *MysqlGormLogger) Error(ctx context.Context, message string, values ...interface{}) {
 	trace := GetTraceContext(ctx)
 	params := make(map[string]interface{})
 	params["message"] = message
-	params["values"] = fmt.Sprint(values)
+	params["values"] = fmt.Sprintf("%s", values)
 	Log.TagInfo(trace, "_com_mysql_Error", params)
 }
 func (mgl *MysqlGormLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {

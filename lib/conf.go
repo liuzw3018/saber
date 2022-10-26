@@ -3,7 +3,7 @@ package lib
 import (
 	"bytes"
 	"database/sql"
-	dlog "github.com/e421083458/golang_common/log"
+	slog "github.com/liuzw3018/saber/log"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 	"io/ioutil"
@@ -67,16 +67,18 @@ type RedisConf struct {
 }
 
 //全局变量
-var ConfBase *BaseConf
-var DBMapPool map[string]*sql.DB
-var GORMMapPool map[string]*gorm.DB
-var DBDefaultPool *sql.DB
-var GORMDefaultPool *gorm.DB
-var ConfRedis *RedisConf
-var ConfRedisMap *RedisMapConf
-var ViperConfMap map[string]*viper.Viper
+var (
+	ConfBase        *BaseConf
+	DBMapPool       map[string]*sql.DB
+	GORMMapPool     map[string]*gorm.DB
+	DBDefaultPool   *sql.DB
+	GORMDefaultPool *gorm.DB
+	ConfRedis       *RedisConf
+	ConfRedisMap    *RedisMapConf
+	ViperConfMap    map[string]*viper.Viper
+)
 
-//获取基本配置信息
+// GetBaseConf 获取基本配置信息
 func GetBaseConf() *BaseConf {
 	return ConfBase
 }
@@ -107,33 +109,33 @@ func InitBaseConf(path string) error {
 	}
 
 	//配置日志
-	logConf := dlog.LogConfig{
+	logConf := slog.LogConfig{
 		Level: ConfBase.Log.Level,
-		FW: dlog.ConfFileWriter{
+		FW: slog.ConfFileWriter{
 			On:              ConfBase.Log.FW.On,
 			LogPath:         ConfBase.Log.FW.LogPath,
 			RotateLogPath:   ConfBase.Log.FW.RotateLogPath,
 			WfLogPath:       ConfBase.Log.FW.WfLogPath,
 			RotateWfLogPath: ConfBase.Log.FW.RotateWfLogPath,
 		},
-		CW: dlog.ConfConsoleWriter{
+		CW: slog.ConfConsoleWriter{
 			On:    ConfBase.Log.CW.On,
 			Color: ConfBase.Log.CW.Color,
 		},
 	}
-	if err := dlog.SetupDefaultLogWithConf(logConf); err != nil {
+	if err := slog.SetupDefaultLogWithConf(logConf); err != nil {
 		panic(err)
 	}
-	dlog.SetLayout("2006-01-02T15:04:05.000")
+	slog.SetLayout("2006-01-02T15:04:05.000")
 	return nil
 }
 
 //
 //func InitLogger(path string) error {
-//	if err := dlog.SetupDefaultLogWithFile(path); err != nil {
+//	if err := slog.SetupDefaultLogWithFile(path); err != nil {
 //		panic(err)
 //	}
-//	dlog.SetLayout("2006-01-02T15:04:05.000")
+//	slog.SetLayout("2006-01-02T15:04:05.000")
 //	return nil
 //}
 
@@ -147,7 +149,7 @@ func InitRedisConf(path string) error {
 	return nil
 }
 
-//初始化配置文件
+// InitViperConf 初始化配置文件
 func InitViperConf() error {
 	f, err := os.Open(ConfEnvPath + "/")
 	if err != nil {
@@ -176,7 +178,7 @@ func InitViperConf() error {
 	return nil
 }
 
-//获取get配置信息
+// GetStringConf 获取get配置信息
 func GetStringConf(key string) string {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -190,7 +192,7 @@ func GetStringConf(key string) string {
 	return confString
 }
 
-//获取get配置信息
+// GetStringMapConf 获取get配置信息
 func GetStringMapConf(key string) map[string]interface{} {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -201,7 +203,7 @@ func GetStringMapConf(key string) map[string]interface{} {
 	return conf
 }
 
-//获取get配置信息
+// GetConf 获取get配置信息
 func GetConf(key string) interface{} {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -212,7 +214,7 @@ func GetConf(key string) interface{} {
 	return conf
 }
 
-//获取get配置信息
+// GetBoolConf 获取get配置信息
 func GetBoolConf(key string) bool {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -223,7 +225,7 @@ func GetBoolConf(key string) bool {
 	return conf
 }
 
-//获取get配置信息
+// GetFloat64Conf 获取get配置信息
 func GetFloat64Conf(key string) float64 {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -234,7 +236,7 @@ func GetFloat64Conf(key string) float64 {
 	return conf
 }
 
-//获取get配置信息
+// GetIntConf 获取get配置信息
 func GetIntConf(key string) int {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -245,7 +247,7 @@ func GetIntConf(key string) int {
 	return conf
 }
 
-//获取get配置信息
+// GetStringMapStringConf 获取get配置信息
 func GetStringMapStringConf(key string) map[string]string {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -256,7 +258,7 @@ func GetStringMapStringConf(key string) map[string]string {
 	return conf
 }
 
-//获取get配置信息
+// GetStringSliceConf 获取get配置信息
 func GetStringSliceConf(key string) []string {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -267,7 +269,7 @@ func GetStringSliceConf(key string) []string {
 	return conf
 }
 
-//获取get配置信息
+// GetTimeConf 获取get配置信息
 func GetTimeConf(key string) time.Time {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -278,7 +280,7 @@ func GetTimeConf(key string) time.Time {
 	return conf
 }
 
-//获取时间阶段长度
+// GetDurationConf 获取时间阶段长度
 func GetDurationConf(key string) time.Duration {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -289,7 +291,7 @@ func GetDurationConf(key string) time.Duration {
 	return conf
 }
 
-//是否设置了key
+// IsSetConf 是否设置了key
 func IsSetConf(key string) bool {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {

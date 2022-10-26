@@ -73,12 +73,12 @@ func SetupLogInstanceWithConf(lc LogConfig, logger *Logger) (err error) {
 		logger.SetLevel(FATAL)
 
 	default:
-		err = errors.New("Invalid log level")
+		err = errors.New("invalid log level")
 	}
 	return
 }
 
 func SetupDefaultLogWithConf(lc LogConfig) (err error) {
 	defaultLoggerInit()
-	return SetupLogInstanceWithConf(lc, logger_default)
+	return SetupLogInstanceWithConf(lc, loggerDefault)
 }

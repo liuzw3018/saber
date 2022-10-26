@@ -2,7 +2,7 @@ package lib
 
 import (
 	"fmt"
-	dlog "github.com/e421083458/golang_common/log"
+	slog "github.com/liuzw3018/saber/log"
 	"strings"
 )
 
@@ -41,7 +41,7 @@ func (l *Logger) TagInfo(trace *TraceContext, dltag string, m map[string]interfa
 	m[_traceId] = trace.TraceId
 	m[_childSpanId] = trace.CSpanId
 	m[_spanId] = trace.SpanId
-	dlog.Info(parseParams(m))
+	slog.Info(parseParams(m))
 }
 
 func (l *Logger) TagWarn(trace *TraceContext, dltag string, m map[string]interface{}) {
@@ -49,7 +49,7 @@ func (l *Logger) TagWarn(trace *TraceContext, dltag string, m map[string]interfa
 	m[_traceId] = trace.TraceId
 	m[_childSpanId] = trace.CSpanId
 	m[_spanId] = trace.SpanId
-	dlog.Warn(parseParams(m))
+	slog.Warn(parseParams(m))
 }
 
 func (l *Logger) TagError(trace *TraceContext, dltag string, m map[string]interface{}) {
@@ -57,7 +57,7 @@ func (l *Logger) TagError(trace *TraceContext, dltag string, m map[string]interf
 	m[_traceId] = trace.TraceId
 	m[_childSpanId] = trace.CSpanId
 	m[_spanId] = trace.SpanId
-	dlog.Error(parseParams(m))
+	slog.Error(parseParams(m))
 }
 
 func (l *Logger) TagTrace(trace *TraceContext, dltag string, m map[string]interface{}) {
@@ -65,7 +65,7 @@ func (l *Logger) TagTrace(trace *TraceContext, dltag string, m map[string]interf
 	m[_traceId] = trace.TraceId
 	m[_childSpanId] = trace.CSpanId
 	m[_spanId] = trace.SpanId
-	dlog.Trace(parseParams(m))
+	slog.Trace(parseParams(m))
 }
 
 func (l *Logger) TagDebug(trace *TraceContext, dltag string, m map[string]interface{}) {
@@ -73,11 +73,11 @@ func (l *Logger) TagDebug(trace *TraceContext, dltag string, m map[string]interf
 	m[_traceId] = trace.TraceId
 	m[_childSpanId] = trace.CSpanId
 	m[_spanId] = trace.SpanId
-	dlog.Debug(parseParams(m))
+	slog.Debug(parseParams(m))
 }
 
 func (l *Logger) Close() {
-	dlog.Close()
+	slog.Close()
 }
 
 // 生成业务dltag

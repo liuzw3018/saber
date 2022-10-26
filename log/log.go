@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	LEVEL_FLAGS = [...]string{"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"}
+	LevelFlags = [...]string{"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"}
 )
 
 const (
@@ -23,7 +23,7 @@ const (
 	FATAL
 )
 
-const tunnel_size_default = 1024
+const tunnelSizeDefault = 1024
 
 type Record struct {
 	time  string
@@ -33,7 +33,7 @@ type Record struct {
 }
 
 func (r *Record) String() string {
-	return fmt.Sprintf("[%s][%s][%s] %s\n", LEVEL_FLAGS[r.level], r.time, r.code, r.info)
+	return fmt.Sprintf("[%s][%s][%s] %s\n", LevelFlags[r.level], r.time, r.code, r.info)
 }
 
 type Writer interface {
@@ -62,13 +62,13 @@ type Logger struct {
 }
 
 func NewLogger() *Logger {
-	if logger_default != nil && takeup == false {
+	if loggerDefault != nil && takeup == false {
 		takeup = true //默认启动标志
-		return logger_default
+		return loggerDefault
 	}
 	l := new(Logger)
 	l.writers = []Writer{}
-	l.tunnel = make(chan *Record, tunnel_size_default)
+	l.tunnel = make(chan *Record, tunnelSizeDefault)
 	l.c = make(chan bool, 2)
 	l.level = DEBUG
 	l.layout = "2006/01/02 15:04:05"
@@ -229,64 +229,64 @@ func boostrapLogWriter(logger *Logger) {
 
 // default logger
 var (
-	logger_default *Logger
-	takeup         = false
+	loggerDefault *Logger
+	takeup        = false
 )
 
 func SetLevel(lvl int) {
 	defaultLoggerInit()
-	logger_default.level = lvl
+	loggerDefault.level = lvl
 }
 
 func SetLayout(layout string) {
 	defaultLoggerInit()
-	logger_default.layout = layout
+	loggerDefault.layout = layout
 }
 
 func Trace(fmt string, args ...interface{}) {
 	defaultLoggerInit()
-	logger_default.deliverRecordToWriter(TRACE, fmt, args...)
+	loggerDefault.deliverRecordToWriter(TRACE, fmt, args...)
 }
 
 func Debug(fmt string, args ...interface{}) {
 	defaultLoggerInit()
-	logger_default.deliverRecordToWriter(DEBUG, fmt, args...)
+	loggerDefault.deliverRecordToWriter(DEBUG, fmt, args...)
 }
 
 func Warn(fmt string, args ...interface{}) {
 	defaultLoggerInit()
-	logger_default.deliverRecordToWriter(WARNING, fmt, args...)
+	loggerDefault.deliverRecordToWriter(WARNING, fmt, args...)
 }
 
 func Info(fmt string, args ...interface{}) {
 	defaultLoggerInit()
-	logger_default.deliverRecordToWriter(INFO, fmt, args...)
+	loggerDefault.deliverRecordToWriter(INFO, fmt, args...)
 }
 
 func Error(fmt string, args ...interface{}) {
 	defaultLoggerInit()
-	logger_default.deliverRecordToWriter(ERROR, fmt, args...)
+	loggerDefault.deliverRecordToWriter(ERROR, fmt, args...)
 }
 
 func Fatal(fmt string, args ...interface{}) {
 	defaultLoggerInit()
-	logger_default.deliverRecordToWriter(FATAL, fmt, args...)
+	loggerDefault.deliverRecordToWriter(FATAL, fmt, args...)
 }
 
 func Register(w Writer) {
 	defaultLoggerInit()
-	logger_default.Register(w)
+	loggerDefault.Register(w)
 }
 
 func Close() {
 	defaultLoggerInit()
-	logger_default.Close()
-	logger_default = nil
+	loggerDefault.Close()
+	loggerDefault = nil
 	takeup = false
 }
 
 func defaultLoggerInit() {
 	if takeup == false {
-		logger_default = NewLogger()
+		loggerDefault = NewLogger()
 	}
 }

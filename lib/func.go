@@ -7,7 +7,7 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
-	dlog "github.com/e421083458/golang_common/log"
+	slog "github.com/liuzw3018/saber/log"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -19,20 +19,21 @@ import (
 	"time"
 )
 
-var TimeLocation *time.Location
-var TimeFormat = "2006-01-02 15:04:05"
-var DateFormat = "2006-01-02"
-var LocalIP = net.ParseIP("127.0.0.1")
+var (
+	TimeLocation *time.Location
+	TimeFormat   = "2006-01-02 15:04:05"
+	DateFormat   = "2006-01-02"
+	LocalIP      = net.ParseIP("127.0.0.1")
+)
 
-//公共初始化函数：支持两种方式设置配置文件
-//
+// Init 公共初始化函数：支持两种方式设置配置文件
 //函数传入配置文件 Init("./conf/dev/")
 //如果配置文件为空，会从命令行中读取 	  -config conf/dev/
 func Init(configPath string) error {
 	return InitModule(configPath, []string{"base", "mysql", "redis"})
 }
 
-//模块初始化
+// InitModule 模块初始化
 func InitModule(configPath string, modules []string) error {
 	conf := flag.String("config", configPath, "input config file like ./conf/dev/")
 	flag.Parse()
@@ -94,12 +95,12 @@ func InitModule(configPath string, modules []string) error {
 	return nil
 }
 
-//公共销毁函数
+// Destroy 公共销毁函数
 func Destroy() {
 	log.Println("------------------------------------------------------------------------")
 	log.Printf("[INFO] %s\n", " start destroy resources.")
 	CloseDB()
-	dlog.Close()
+	slog.Close()
 	log.Printf("[INFO] %s\n", " success destroy resources.")
 }
 
