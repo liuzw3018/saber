@@ -112,7 +112,7 @@ func HttpGET(trace *TraceContext, urlString string, urlParams url.Values, msTime
 	urlString = AddGetDataToUrl(urlString, urlParams)
 	req, err := http.NewRequest("GET", urlString, nil)
 	if err != nil {
-		Log.TagWarn(trace, DLTagHTTPFailed, map[string]interface{}{
+		Log.TagWarn(trace, SRTagHTTPFailed, map[string]interface{}{
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "GET",
@@ -127,7 +127,7 @@ func HttpGET(trace *TraceContext, urlString string, urlParams url.Values, msTime
 	req = addTrace2Header(req, trace)
 	resp, err := client.Do(req)
 	if err != nil {
-		Log.TagWarn(trace, DLTagHTTPFailed, map[string]interface{}{
+		Log.TagWarn(trace, SRTagHTTPFailed, map[string]interface{}{
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "GET",
@@ -139,7 +139,7 @@ func HttpGET(trace *TraceContext, urlString string, urlParams url.Values, msTime
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		Log.TagWarn(trace, DLTagHTTPFailed, map[string]interface{}{
+		Log.TagWarn(trace, SRTagHTTPFailed, map[string]interface{}{
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "GET",
@@ -149,7 +149,7 @@ func HttpGET(trace *TraceContext, urlString string, urlParams url.Values, msTime
 		})
 		return nil, nil, err
 	}
-	Log.TagInfo(trace, DLTagHTTPSuccess, map[string]interface{}{
+	Log.TagInfo(trace, SRTagHTTPSuccess, map[string]interface{}{
 		"url":       urlString,
 		"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 		"method":    "GET",
@@ -176,7 +176,7 @@ func HttpPOST(trace *TraceContext, urlString string, urlParams url.Values, msTim
 	req.Header.Set("Content-Type", contextType)
 	resp, err := client.Do(req)
 	if err != nil {
-		Log.TagWarn(trace, DLTagHTTPFailed, map[string]interface{}{
+		Log.TagWarn(trace, SRTagHTTPFailed, map[string]interface{}{
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "POST",
@@ -188,7 +188,7 @@ func HttpPOST(trace *TraceContext, urlString string, urlParams url.Values, msTim
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		Log.TagWarn(trace, DLTagHTTPFailed, map[string]interface{}{
+		Log.TagWarn(trace, SRTagHTTPFailed, map[string]interface{}{
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "POST",
@@ -198,7 +198,7 @@ func HttpPOST(trace *TraceContext, urlString string, urlParams url.Values, msTim
 		})
 		return nil, nil, err
 	}
-	Log.TagInfo(trace, DLTagHTTPSuccess, map[string]interface{}{
+	Log.TagInfo(trace, SRTagHTTPSuccess, map[string]interface{}{
 		"url":       urlString,
 		"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 		"method":    "POST",
@@ -221,7 +221,7 @@ func HttpJSON(trace *TraceContext, urlString string, jsonContent string, msTimeo
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
-		Log.TagWarn(trace, DLTagHTTPFailed, map[string]interface{}{
+		Log.TagWarn(trace, SRTagHTTPFailed, map[string]interface{}{
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "POST",
@@ -233,7 +233,7 @@ func HttpJSON(trace *TraceContext, urlString string, jsonContent string, msTimeo
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		Log.TagWarn(trace, DLTagHTTPFailed, map[string]interface{}{
+		Log.TagWarn(trace, SRTagHTTPFailed, map[string]interface{}{
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "POST",
@@ -243,7 +243,7 @@ func HttpJSON(trace *TraceContext, urlString string, jsonContent string, msTimeo
 		})
 		return nil, nil, err
 	}
-	Log.TagInfo(trace, DLTagHTTPSuccess, map[string]interface{}{
+	Log.TagInfo(trace, SRTagHTTPSuccess, map[string]interface{}{
 		"url":       urlString,
 		"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 		"method":    "POST",

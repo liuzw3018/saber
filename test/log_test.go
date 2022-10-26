@@ -10,7 +10,7 @@ import (
 //测试日志打点
 func TestDefaultLog(t *testing.T) {
 	SetUp()
-	lib.Log.TagInfo(lib.NewTrace(), lib.DLTagMySqlSuccess, map[string]interface{}{
+	lib.Log.TagInfo(lib.NewTrace(), lib.SRTagMySqlSuccess, map[string]interface{}{
 		"sql": "sql",
 	})
 	time.Sleep(time.Second)

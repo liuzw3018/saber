@@ -24,6 +24,6 @@ func main() {
 	}
 	fmt.Println(idf)
 	//todo sth
-	lib.Log.TagInfo(lib.NewTrace(), lib.DLTagUndefind, map[string]interface{}{"message": "todo sth"})
+	lib.Log.TagInfo(lib.NewTrace(), lib.SRTagUndefind, map[string]interface{}{"message": "todo sth"})
 	time.Sleep(time.Second)
 }

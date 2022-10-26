@@ -8,27 +8,27 @@ import (
 
 // 通用DLTag常量定义
 const (
-	DLTagUndefind      = "_undef"
-	DLTagMySqlFailed   = "_com_mysql_failure"
-	DLTagRedisFailed   = "_com_redis_failure"
-	DLTagMySqlSuccess  = "_com_mysql_success"
-	DLTagRedisSuccess  = "_com_redis_success"
-	DLTagThriftFailed  = "_com_thrift_failure"
-	DLTagThriftSuccess = "_com_thrift_success"
-	DLTagHTTPSuccess   = "_com_http_success"
-	DLTagHTTPFailed    = "_com_http_failure"
-	DLTagTCPFailed     = "_com_tcp_failure"
-	DLTagRequestIn     = "_com_request_in"
-	DLTagRequestOut    = "_com_request_out"
+	SRTagUndefind      = "_undef"
+	SRTagMySqlFailed   = "_com_mysql_failure"
+	SRTagRedisFailed   = "_com_redis_failure"
+	SRTagMySqlSuccess  = "_com_mysql_success"
+	SRTagRedisSuccess  = "_com_redis_success"
+	SRTagThriftFailed  = "_com_thrift_failure"
+	SRTagThriftSuccess = "_com_thrift_success"
+	SRTagHTTPSuccess   = "_com_http_success"
+	SRTagHTTPFailed    = "_com_http_failure"
+	SRTagTCPFailed     = "_com_tcp_failure"
+	SRTagRequestIn     = "_com_request_in"
+	SRTagRequestOut    = "_com_request_out"
 )
 
 const (
-	_dlTag          = "dltag"
+	_srTag          = "srtag"
 	_traceId        = "traceid"
 	_spanId         = "spanid"
 	_childSpanId    = "cspanid"
-	_dlTagBizPrefix = "_com_"
-	_dlTagBizUndef  = "_com_undef"
+	_srTagBizPrefix = "_com_"
+	_srTagBizUndef  = "_com_undef"
 )
 
 var Log *Logger
@@ -36,40 +36,40 @@ var Log *Logger
 type Logger struct {
 }
 
-func (l *Logger) TagInfo(trace *TraceContext, dltag string, m map[string]interface{}) {
-	m[_dlTag] = checkDLTag(dltag)
+func (l *Logger) TagInfo(trace *TraceContext, srtag string, m map[string]interface{}) {
+	m[_srTag] = checkDLTag(srtag)
 	m[_traceId] = trace.TraceId
 	m[_childSpanId] = trace.CSpanId
 	m[_spanId] = trace.SpanId
 	slog.Info(parseParams(m))
 }
 
-func (l *Logger) TagWarn(trace *TraceContext, dltag string, m map[string]interface{}) {
-	m[_dlTag] = checkDLTag(dltag)
+func (l *Logger) TagWarn(trace *TraceContext, srtag string, m map[string]interface{}) {
+	m[_srTag] = checkDLTag(srtag)
 	m[_traceId] = trace.TraceId
 	m[_childSpanId] = trace.CSpanId
 	m[_spanId] = trace.SpanId
 	slog.Warn(parseParams(m))
 }
 
-func (l *Logger) TagError(trace *TraceContext, dltag string, m map[string]interface{}) {
-	m[_dlTag] = checkDLTag(dltag)
+func (l *Logger) TagError(trace *TraceContext, srtag string, m map[string]interface{}) {
+	m[_srTag] = checkDLTag(srtag)
 	m[_traceId] = trace.TraceId
 	m[_childSpanId] = trace.CSpanId
 	m[_spanId] = trace.SpanId
 	slog.Error(parseParams(m))
 }
 
-func (l *Logger) TagTrace(trace *TraceContext, dltag string, m map[string]interface{}) {
-	m[_dlTag] = checkDLTag(dltag)
+func (l *Logger) TagTrace(trace *TraceContext, srtag string, m map[string]interface{}) {
+	m[_srTag] = checkDLTag(srtag)
 	m[_traceId] = trace.TraceId
 	m[_childSpanId] = trace.CSpanId
 	m[_spanId] = trace.SpanId
 	slog.Trace(parseParams(m))
 }
 
-func (l *Logger) TagDebug(trace *TraceContext, dltag string, m map[string]interface{}) {
-	m[_dlTag] = checkDLTag(dltag)
+func (l *Logger) TagDebug(trace *TraceContext, srtag string, m map[string]interface{}) {
+	m[_srTag] = checkDLTag(srtag)
 	m[_traceId] = trace.TraceId
 	m[_childSpanId] = trace.CSpanId
 	m[_spanId] = trace.SpanId
@@ -80,45 +80,45 @@ func (l *Logger) Close() {
 	slog.Close()
 }
 
-// 生成业务dltag
+// CreateBizDLTag 生成业务srtag
 func CreateBizDLTag(tagName string) string {
 	if tagName == "" {
-		return _dlTagBizUndef
+		return _srTagBizUndef
 	}
 
-	return _dlTagBizPrefix + tagName
+	return _srTagBizPrefix + tagName
 }
 
-// 校验dltag合法性
-func checkDLTag(dltag string) string {
-	if strings.HasPrefix(dltag, _dlTagBizPrefix) {
-		return dltag
+// 校验srtag合法性
+func checkDLTag(srtag string) string {
+	if strings.HasPrefix(srtag, _srTagBizPrefix) {
+		return srtag
 	}
 
-	if strings.HasPrefix(dltag, "_com_") {
-		return dltag
+	if strings.HasPrefix(srtag, "_com_") {
+		return srtag
 	}
 
-	if dltag == DLTagUndefind {
-		return dltag
+	if srtag == SRTagUndefind {
+		return srtag
 	}
-	return dltag
+	return srtag
 }
 
-//map格式化为string
+// map格式化为string
 func parseParams(m map[string]interface{}) string {
-	var dltag string = "_undef"
-	if _dltag, _have := m["dltag"]; _have {
-		if __val, __ok := _dltag.(string); __ok {
-			dltag = __val
+	var srtag string = "_undef"
+	if _srtag, _have := m["srtag"]; _have {
+		if __val, __ok := _srtag.(string); __ok {
+			srtag = __val
 		}
 	}
 	for _key, _val := range m {
-		if _key == "dltag" {
+		if _key == "srtag" {
 			continue
 		}
-		dltag = dltag + "||" + fmt.Sprintf("%v=%+v", _key, _val)
+		srtag = srtag + "||" + fmt.Sprintf("%v=%+v", _key, _val)
 	}
-	dltag = strings.Trim(fmt.Sprintf("%q", dltag), "\"")
-	return dltag
+	srtag = strings.Trim(fmt.Sprintf("%q", srtag), "\"")
+	return srtag
 }
