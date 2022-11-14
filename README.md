@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+## 本项目原地址 github.com/e421083458/golang_common ，这个项目是在golang_common的基础上修改
 - [定位](#%E5%AE%9A%E4%BD%8D)
 - [功能](#%E5%8A%9F%E8%83%BD)
 - [安装及使用](#%E5%AE%89%E8%A3%85%E5%8F%8A%E4%BD%BF%E7%94%A8)
